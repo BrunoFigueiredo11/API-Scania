@@ -3,6 +3,7 @@ package com.api.scania.api.scania.controller;
 import com.api.scania.api.scania.dto.EmailDto;
 import com.api.scania.api.scania.model.Descricao;
 import com.api.scania.api.scania.model.Licitacao;
+import com.api.scania.api.scania.model.Orgao;
 import com.api.scania.api.scania.model.StatusEmail;
 import com.api.scania.api.scania.repository.LicitacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,10 @@ public class LicitacaoController {
 
     @Autowired
     private EmailController emailController;
+    @Autowired
+    private DescricaoController descController;
+    @Autowired
+    private OrgaoController orgController;
 
     @GetMapping("/licitacao")
     public List<Licitacao> lista() {
@@ -37,9 +42,36 @@ public class LicitacaoController {
     @PutMapping("/licitacao/{id}/{status}")
     public ResponseEntity<Void> list(@PathVariable int id, @PathVariable int status) {
         try {
+            List<Licitacao> lic = lista(id);
             licitacaoRepository.updateStatus(status, id);
-            if (status == 1) {
-                emailController.sendEmail(new EmailDto("brunofigueiredo1120@gmail.com", "brunofigueiredo1120@gmail.com", "Licitação Selecionada: ", "texto", "00/00/0000", StatusEmail.SEND));
+            if (lic.get(0).getCd_status() == 2 && status == 1 || lic.get(0).getCd_status() == 3 && status == 1) {
+                List<Descricao> desc = descController.lista(lic.get(0).getCd_descricao());
+                List<Orgao> orgao = orgController.lista(lic.get(0).getCd_orgao());
+                emailController.sendEmail(new EmailDto("brunofigueiredo1120@gmail.com",
+                        "brunofigueiredo1120@gmail.com",
+                         "Licitação Selecionada - Edital - " + lic.get(0).getCd_edital(),
+                           "Licitação Selecionada: Edital - " + lic.get(0).getCd_edital() +
+                                "\nOrgão - " + orgao.get(0).getOrgao() +
+                                "\nData de Acolhimento - " + lic.get(0).getDt_acolhimento() +
+                                "\nData de Disputa - " + lic.get(0).getDt_disputa() +
+                                "\nDescrição - " + desc.get(0).getTexto() +
+                                "\nLink para o Edital - " + desc.get(0).getEdital_link(),
+                        "00/00/0000",
+                        StatusEmail.SEND));
+            }  else if (lic.get(0).getCd_status() == 1 && status == 3) {
+                List<Descricao> desc = descController.lista(lic.get(0).getCd_descricao());
+                List<Orgao> orgao = orgController.lista(lic.get(0).getCd_orgao());
+                emailController.sendEmail(new EmailDto("brunofigueiredo1120@gmail.com",
+                        "brunofigueiredo1120@gmail.com",
+                        "Alteração ****** Licitação *** DESCARTADA *** Edital - " + lic.get(0).getCd_edital(),
+                        "Alteração ****** Licitação DESCARTADA: Edital - " + lic.get(0).getCd_edital() +
+                                "\nOrgão - " + orgao.get(0).getOrgao() +
+                                "\nData de Acolhimento - " + lic.get(0).getDt_acolhimento() +
+                                "\nData de Disputa - " + lic.get(0).getDt_disputa() +
+                                "\nDescrição - " + desc.get(0).getTexto() +
+                                "\nLink para o Edital - " + desc.get(0).getEdital_link(),
+                        "00/00/0000",
+                        StatusEmail.SEND));
             }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
