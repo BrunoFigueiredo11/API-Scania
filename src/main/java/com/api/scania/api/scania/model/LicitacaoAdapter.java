@@ -9,6 +9,7 @@ import java.util.List;
 
 
 @Data
+@Entity
 public class LicitacaoAdapter {
     @Id
     private int cd_licitacao;
@@ -16,17 +17,13 @@ public class LicitacaoAdapter {
     private String cd_edital;
     private String dt_acolhimento;
     private String dt_disputa;
-    private List<Status> status;
-    private List<Orgao> orgao;
-    private List<Descricao> descricao;
+    private int cd_status;
+    private String tipo;
+    private int cd_orgao;
+    private String orgao;
+    private int cd_descricao;
+    private String texto;
+    private String edital_link;
 
-    public LicitacaoAdapter(int cd_licitacao, String cd_edital, String dt_acolhimento, String dt_disputa, List<Status> status, List<Orgao> orgao, List<Descricao> descricao) {
-        this.cd_licitacao = cd_licitacao;
-        this.cd_edital = cd_edital;
-        this.dt_acolhimento = dt_acolhimento;
-        this.dt_disputa = dt_disputa;
-        this.status = status;
-        this.orgao = orgao;
-        this.descricao = descricao;
-    }
+
 }

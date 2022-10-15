@@ -21,6 +21,4 @@ public interface LicitacaoRepository extends JpaRepository<Licitacao,Integer> {
     void updateStatus(int status,int cd_licitacao
     )throws Exception;
 
-  @Query(value = "select * from view_licitacao", nativeQuery = true)
-  List<LicitacaoAdapter> findAllLicAdapter();
 }

@@ -2,10 +2,7 @@ package com.api.scania.api.scania.controller;
 
 import com.api.scania.api.scania.dto.EmailDto;
 import com.api.scania.api.scania.model.*;
-import com.api.scania.api.scania.repository.DescricaoRepository;
-import com.api.scania.api.scania.repository.LicitacaoRepository;
-import com.api.scania.api.scania.repository.OrgaoRepository;
-import com.api.scania.api.scania.repository.StatusRepository;
+import com.api.scania.api.scania.repository.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -26,6 +23,8 @@ public class LicitacaoController {
     @Autowired
     private LicitacaoRepository licitacaoRepository;
     @Autowired
+    private LicitacaoAdapterRepository licitacaoAdapterRepository;
+    @Autowired
     private StatusRepository statusRepository;
     @Autowired
     private OrgaoRepository orgaoRepository;
@@ -42,20 +41,8 @@ public class LicitacaoController {
     @GetMapping("/licitacao")
     public List<LicitacaoAdapter> lista() {
 
-        List<Licitacao> lic = licitacaoRepository.findAll();
-        List<LicitacaoAdapter> adap = new ArrayList<>();
-        for (int i = 0;i<lic.size();i++){
-            adap.add(new LicitacaoAdapter(
-                    lic.get(i).getCd_licitacao(),
-                    lic.get(i).getCd_edital()  ,
-                    lic.get(i).getDt_acolhimento()   ,
-                    lic.get(i).getDt_disputa()    ,
-                    statusRepository.findAllById(Collections.singleton(lic.get(i).getCd_status()))  ,
-                    orgaoRepository.findAllById(Collections.singleton(lic.get(i).getCd_status()))     ,
-                    descricaoRepository.findAllById(Collections.singleton(lic.get(i).getCd_status()))
-                    ));
-        }
-        return adap;
+
+        return licitacaoAdapterRepository.findAllLicAdapter();
     }
 
     @GetMapping("/licitacao/{id}")
