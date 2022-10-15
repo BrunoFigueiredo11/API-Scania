@@ -1,17 +1,22 @@
 package com.api.scania.api.scania.controller;
 
 import com.api.scania.api.scania.dto.EmailDto;
-import com.api.scania.api.scania.model.Descricao;
-import com.api.scania.api.scania.model.Licitacao;
-import com.api.scania.api.scania.model.Orgao;
-import com.api.scania.api.scania.model.StatusEmail;
+import com.api.scania.api.scania.model.*;
+import com.api.scania.api.scania.repository.DescricaoRepository;
 import com.api.scania.api.scania.repository.LicitacaoRepository;
+import com.api.scania.api.scania.repository.OrgaoRepository;
+import com.api.scania.api.scania.repository.StatusRepository;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import org.bson.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,6 +25,12 @@ import java.util.List;
 public class LicitacaoController {
     @Autowired
     private LicitacaoRepository licitacaoRepository;
+    @Autowired
+    private StatusRepository statusRepository;
+    @Autowired
+    private OrgaoRepository orgaoRepository;
+    @Autowired
+    private DescricaoRepository descricaoRepository;
 
     @Autowired
     private EmailController emailController;
@@ -29,8 +40,22 @@ public class LicitacaoController {
     private OrgaoController orgController;
 
     @GetMapping("/licitacao")
-    public List<Licitacao> lista() {
-        return licitacaoRepository.findAll();
+    public List<LicitacaoAdapter> lista() {
+
+        List<Licitacao> lic = licitacaoRepository.findAll();
+        List<LicitacaoAdapter> adap = new ArrayList<>();
+        for (int i = 0;i<lic.size();i++){
+            adap.add(new LicitacaoAdapter(
+                    lic.get(i).getCd_licitacao(),
+                    lic.get(i).getCd_edital()  ,
+                    lic.get(i).getDt_acolhimento()   ,
+                    lic.get(i).getDt_disputa()    ,
+                    statusRepository.findAllById(Collections.singleton(lic.get(i).getCd_status()))  ,
+                    orgaoRepository.findAllById(Collections.singleton(lic.get(i).getCd_status()))     ,
+                    descricaoRepository.findAllById(Collections.singleton(lic.get(i).getCd_status()))
+                    ));
+        }
+        return adap;
     }
 
     @GetMapping("/licitacao/{id}")
