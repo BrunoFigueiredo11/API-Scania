@@ -16,19 +16,9 @@ import java.util.List;
 public class LicitacaoController {
     @Autowired
     private LicitacaoRepository licitacaoRepository;
-    @Autowired
-    private StatusRepository statusRepository;
-    @Autowired
-    private OrgaoRepository orgaoRepository;
-    @Autowired
-    private DescricaoRepository descricaoRepository;
 
     @Autowired
     private EmailController emailController;
-    @Autowired
-    private DescricaoController descController;
-    @Autowired
-    private OrgaoController orgController;
 
     @GetMapping("/licitacao")
     public List<Licitacao> lista() {
