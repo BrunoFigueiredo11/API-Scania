@@ -1,6 +1,5 @@
 package com.api.scania.api.scania.controller;
 
-import com.api.scania.api.scania.model.Licitacao;
 import com.api.scania.api.scania.model.Orgao;
 import com.api.scania.api.scania.repository.OrgaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,9 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
+
 @Data
-@Table(name = "tb_licitacao")
+@Entity
+@Table(name = "view_licitacao")
 public class Licitacao {
     @Id
     private int cd_licitacao;
@@ -17,6 +18,12 @@ public class Licitacao {
     private String dt_acolhimento;
     private String dt_disputa;
     private int cd_status;
+    private String tipo;
     private int cd_orgao;
+    private String orgao;
     private int cd_descricao;
+    private String texto;
+    private String edital_link;
+
+
 }
