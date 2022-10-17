@@ -19,20 +19,18 @@ public class LicitacaoController {
 
     @Autowired
     private EmailController emailController;
-
+//ENDPOINT PRINCIPAL, LISTA TODAS AS LICITACOES
     @GetMapping("/licitacao")
     public List<Licitacao> lista() {
-
-
         return licitacaoRepository.findAllLicAdapter();
     }
-
+// LISTA A LICITACAO DE FORMA INDIVIDUAL
     @GetMapping("/licitacao/{id}")
     public List<Licitacao> lista(@PathVariable int id) {
         return licitacaoRepository.findAllById(Collections.singleton(id
         ));
     }
-
+// REALIZA A ALTERAÇÃO NO BANCO DO STATUS E ENVIA O EMAIL PARA O RESPONSAVEL
     @PutMapping("/licitacao/{id}/{status}")
     public ResponseEntity<Void> list(@PathVariable int id, @PathVariable int status) {
         try {
@@ -70,6 +68,7 @@ public class LicitacaoController {
 
     }
 
+    // RETORNA AS LICITACOES COM O STATUS SELECIONADO
     @GetMapping("/licitacao/select/{status}")
     public List<Licitacao> listFromStatus(@PathVariable int status) {
         return licitacaoRepository.selectFromStatus(status);
